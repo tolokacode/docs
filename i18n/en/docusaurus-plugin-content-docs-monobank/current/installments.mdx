@@ -1,0 +1,31 @@
+---
+sidebar_position: 4
+title: Installments
+---
+
+# Setting up installments
+
+Open **WooCommerce → Settings → Payments → monobank installments**.
+
+| Field | What to enter |
+|---|---|
+| Enable | Check it to show the payment method at checkout. |
+| Title, Description | What the customer sees. |
+| Environment | **Sandbox** or **Stage** for testing. **Production** for real orders. |
+| Store ID, Secret key | From your contract with monobank. |
+| Number of payments | Comma separated, from 3 to 25, as in your contract. For example: `3,4,6`. |
+| Minimum / maximum amount | Installments are shown only for orders within these limits. |
+| Product page | Show "N payments of X ₴" under the price. |
+
+## How it works for the customer
+
+1. The customer chooses **installments** and the number of payments.
+2. The plugin checks that the phone number belongs to a monobank client.
+3. The customer gets a notification in the monobank app and confirms within 15 minutes.
+4. The order moves to **Processing**, and you can ship it.
+
+:::tip Phone
+Installments need a phone number linked to monobank. In the Checkout block the "Phone" field is optional by default. Make it required in the checkout page editor.
+:::
+
+What to do with the order next is described in [Orders](./orders.mdx).

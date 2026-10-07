@@ -1,0 +1,40 @@
+---
+sidebar_position: 6
+title: Orders
+---
+
+# Orders
+
+## Statuses
+
+| Method | Status | Meaning |
+|---|---|---|
+| Installments | On hold | The customer is confirming in the app (up to 15 minutes). Don't ship yet. |
+| | Processing | The customer confirmed. Ship the order. |
+| | Completed | Set this after shipping. The bank confirms the purchase and pays the shop. |
+| | Cancelled | Before Completed, this cancels the application at the bank. After Completed, use a refund instead. |
+| Cash on delivery | Pending payment | The prepayment hasn't arrived. Don't ship. |
+| | Processing | The prepayment arrived. |
+
+Statuses update automatically: the bank sends notifications, and the plugin also checks applications every 5 minutes.
+
+## The "monobank installments" box
+
+<span className="badge badge--secondary">since 0.3.0</span>
+
+On the right side of the order there's a box with data from the bank: application status, number of payments, the customer's card, whether it's fully paid, where a refund goes, and the refund history.
+
+## Guarantee letter
+
+<span className="badge badge--secondary">since 0.2.0</span>
+
+The same box has two links:
+
+- **Guarantee letter (PDF)** opens in the browser;
+- **Signed file (.p7s)** is the original with the bank's e-signature, for accounting.
+
+## Refunds
+
+Refunds are possible after **Completed**. Click **Refund** in the order as usual in WooCommerce. The plugin asks the bank whether the money can go back to the card; if not, the refund is made in cash in the shop.
+
+If the goods haven't shipped yet, just **cancel** the order.

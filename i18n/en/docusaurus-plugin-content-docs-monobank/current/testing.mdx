@@ -1,0 +1,29 @@
+---
+sidebar_position: 8
+title: Testing
+---
+
+# Testing
+
+You don't need a contract with the bank to test.
+
+1. In the installments settings, choose the **Sandbox** environment.
+2. Enter the test data:
+   - Store ID: `test_store_with_confirm`
+   - Secret key: `secret_98765432--123-123`
+3. Place an order. The result depends on the **last digit of the phone number**:
+
+| Last digit | What happens |
+|---|---|
+| 1 | Approved |
+| 2 | The bank waits for the customer |
+| 3 | The customer's limit is exceeded |
+| 4 | Approved, waiting for the shop to confirm |
+
+For prepayment, use a test token from your plata by mono account.
+
+:::note
+The sandbox always returns the same test data, for example the same guarantee letter and report. That's normal.
+:::
+
+Request logs: **WooCommerce → Status → Logs**, sources `toloka-chast` and `toloka-prepay`.
