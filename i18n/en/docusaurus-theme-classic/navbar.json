@@ -14,5 +14,9 @@
   "item.label.GitHub": {
     "message": "GitHub",
     "description": "Navbar item with label GitHub"
+  },
+  "item.label.Checkbox SDK": {
+    "message": "Checkbox SDK",
+    "description": "Navbar item with label Checkbox SDK"
   }
 }

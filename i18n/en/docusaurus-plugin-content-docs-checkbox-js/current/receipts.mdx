@@ -1,0 +1,111 @@
+---
+sidebar_position: 2
+title: Receipts
+---
+
+# Receipts
+
+## A receipt from an order
+
+`orderReceipt()` does the same math as the WooCommerce plugin. You pass line totals after discounts and get the goods, discounts and the sum to pay.
+
+```ts
+import { randomUUID } from 'node:crypto';
+import { kop, orderReceipt } from '@tolokacode/checkbox';
+
+const order = orderReceipt({
+  lines: [
+    { code: 'sku-1', name: 'Футболка', quantity: 2, total: kop('900.00'), uktzed: '6109100010' },
+    { code: 'sku-2', name: 'Чашка', quantity: 3, total: kop('100.00') },
+  ],
+  shipping: kop(70),
+  discount: kop(20),
+});
+
+const receipt = await checkbox.sell({
+  id: randomUUID(),
+  goods: order.goods,
+  discounts: order.discounts,
+  payments: [{ type: 'CASHLESS', value: order.sum, label: 'Інтернет еквайринг' }],
+  header: 'Магазин «Толока»',
+  footer: 'Замовлення №1024. Дякуємо!',
+  delivery: { emails: ['client@example.com'] },
+});
+```
+
+| Field | What to pass |
+|---|---|
+| `lines` | Goods: code (SKU), name, quantity and the line total in kopecks after discounts. You can add `uktzed` and `tax`. |
+| `shipping` | Shipping cost in kopecks. |
+| `shippingAs` | `'line'` (default): shipping is a separate good. `'surcharge'`: a surcharge on the receipt. |
+| `discount` | An order discount that is not in the line totals yet. For example, a negative fee from a discount plugin. |
+| `tax` | The tax letter or code from your Checkbox account, for all goods. Leave it out if you don't pay VAT. |
+
+Checkbox only takes a whole price per unit. When a line total does not split by the quantity, like 3 cups for 100.00 ₴, the line goes on the receipt as one item: "Чашка × 3".
+
+Goods sold by weight work the same way: `quantity: 1.5` is 1.5 kg.
+
+`kop()` turns hryvnias into kopecks without rounding errors: `kop('450.50')` is `45050`.
+
+## Retries
+
+Always pass your own `id` (UUID) and save it with the order. If a request fails halfway, call `sell()` again with the same `id`. You get the receipt that already exists, not a second one.
+
+## Receipt status
+
+Checkbox takes a few seconds to fiscalize a receipt. `waitForReceipt()` waits until the status is `DONE` or `ERROR`.
+
+```ts
+const done = await checkbox.waitForReceipt(receipt.id);
+if (done.status === 'DONE') {
+  console.log(done.fiscal_code, done.tax_url);
+}
+```
+
+## Returns
+
+```ts
+await checkbox.returnReceipt({
+  id: randomUUID(),
+  goods: order.goods,
+  discounts: order.discounts,
+  payments: [{ type: 'CASHLESS', value: order.sum, label: 'Інтернет еквайринг' }],
+  related_receipt_id: receipt.id,
+});
+```
+
+For a partial return, pass only the goods that come back.
+
+## Prepayment and after-payment
+
+For cash on delivery with an online prepayment:
+
+```ts
+const pre = await checkbox.prepayment({
+  id: randomUUID(),
+  goods: order.goods,
+  payments: [{ type: 'CASHLESS', value: kop(200), label: 'Інтернет еквайринг' }],
+});
+
+// When the customer picks up the parcel:
+await checkbox.afterPayment(pre.pre_payment_relation_id!, {
+  id: randomUUID(),
+  payments: [{ type: 'CASHLESS', value: order.sum - kop(200), label: 'Переказ через ННПП' }],
+});
+
+// If the customer refuses it:
+await checkbox.returnPrepayment(pre.pre_payment_relation_id!);
+```
+
+Save `pre_payment_relation_id` with the order. You need it for the after-payment and the return.
+
+## Files and email
+
+| Method | What it returns |
+|---|---|
+| `receiptPdf(id)` | PDF for printing |
+| `receiptPng(id)` | Receipt image |
+| `receiptHtml(id)`, `receiptText(id)` | HTML and text |
+| `sendReceiptEmail(id, emails)` | Sends the receipt by email |
+
+Link to the receipt for the customer: `https://check.checkbox.ua/<id>`.

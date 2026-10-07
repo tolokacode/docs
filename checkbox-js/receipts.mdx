@@ -1,0 +1,111 @@
+---
+sidebar_position: 2
+title: Чеки
+---
+
+# Чеки
+
+## Чек із замовлення
+
+`orderReceipt()` рахує чек так само, як плагін для WooCommerce. Ви передаєте суми рядків уже зі знижками, а отримуєте товари, знижки й суму до оплати.
+
+```ts
+import { randomUUID } from 'node:crypto';
+import { kop, orderReceipt } from '@tolokacode/checkbox';
+
+const order = orderReceipt({
+  lines: [
+    { code: 'sku-1', name: 'Футболка', quantity: 2, total: kop('900.00'), uktzed: '6109100010' },
+    { code: 'sku-2', name: 'Чашка', quantity: 3, total: kop('100.00') },
+  ],
+  shipping: kop(70),
+  discount: kop(20),
+});
+
+const receipt = await checkbox.sell({
+  id: randomUUID(),
+  goods: order.goods,
+  discounts: order.discounts,
+  payments: [{ type: 'CASHLESS', value: order.sum, label: 'Інтернет еквайринг' }],
+  header: 'Магазин «Толока»',
+  footer: 'Замовлення №1024. Дякуємо!',
+  delivery: { emails: ['client@example.com'] },
+});
+```
+
+| Поле | Що вказати |
+|---|---|
+| `lines` | Товари: код (артикул), назва, кількість і сума рядка в копійках після знижок. Можна додати `uktzed` і `tax`. |
+| `shipping` | Вартість доставки в копійках. |
+| `shippingAs` | `'line'` (типово): доставка окремим товаром. `'surcharge'`: надбавка до чека. |
+| `discount` | Знижка на замовлення, якої ще немає в сумах рядків. Наприклад, від'ємна комісія з плагіна знижок. |
+| `tax` | Літера або код податку з кабінету Checkbox для всіх товарів. Не вказуйте, якщо ви не платник ПДВ. |
+
+Checkbox приймає лише цілу ціну за одиницю. Якщо сума рядка не ділиться на кількість, наприклад 3 чашки за 100,00 ₴, рядок іде в чек однією позицією: «Чашка × 3».
+
+Вагові товари працюють так само: `quantity: 1.5` це 1,5 кг.
+
+`kop()` переводить гривні в копійки без помилок округлення: `kop('450.50')` дає `45050`.
+
+## Повторні запити
+
+Завжди передавайте свій `id` (UUID) і зберігайте його в замовленні. Якщо запит обірвався, повторіть `sell()` з тим самим `id`. Ви отримаєте чек, який уже створено, а не другий.
+
+## Статус чека
+
+Checkbox фіскалізує чек кілька секунд. `waitForReceipt()` чекає, поки статус стане `DONE` або `ERROR`.
+
+```ts
+const done = await checkbox.waitForReceipt(receipt.id);
+if (done.status === 'DONE') {
+  console.log(done.fiscal_code, done.tax_url);
+}
+```
+
+## Повернення
+
+```ts
+await checkbox.returnReceipt({
+  id: randomUUID(),
+  goods: order.goods,
+  discounts: order.discounts,
+  payments: [{ type: 'CASHLESS', value: order.sum, label: 'Інтернет еквайринг' }],
+  related_receipt_id: receipt.id,
+});
+```
+
+Для часткового повернення передайте лише ті товари, які повертаєте.
+
+## Передоплата і післяплата
+
+Для накладеного платежу з онлайн-передоплатою:
+
+```ts
+const pre = await checkbox.prepayment({
+  id: randomUUID(),
+  goods: order.goods,
+  payments: [{ type: 'CASHLESS', value: kop(200), label: 'Інтернет еквайринг' }],
+});
+
+// Коли клієнт отримав посилку:
+await checkbox.afterPayment(pre.pre_payment_relation_id!, {
+  id: randomUUID(),
+  payments: [{ type: 'CASHLESS', value: order.sum - kop(200), label: 'Переказ через ННПП' }],
+});
+
+// Якщо клієнт відмовився:
+await checkbox.returnPrepayment(pre.pre_payment_relation_id!);
+```
+
+Збережіть `pre_payment_relation_id` в замовленні. Він потрібен для післяплати і повернення.
+
+## Файли та пошта
+
+| Метод | Що повертає |
+|---|---|
+| `receiptPdf(id)` | PDF для друку |
+| `receiptPng(id)` | Картинку чека |
+| `receiptHtml(id)`, `receiptText(id)` | HTML і текст |
+| `sendReceiptEmail(id, emails)` | Надсилає чек на пошту |
+
+Посилання на чек для клієнта: `https://check.checkbox.ua/<id>`.

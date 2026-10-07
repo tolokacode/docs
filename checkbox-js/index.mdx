@@ -1,0 +1,64 @@
+---
+sidebar_position: 1
+title: Огляд
+slug: /
+---
+
+# Checkbox SDK
+
+Бібліотека для TypeScript і JavaScript, щоб створювати фіскальні чеки через [Checkbox](https://checkbox.ua) (ПРРО) зі свого сайту чи сервера.
+
+- Касир, зміни, чеки продажу й повернення, передоплата й післяплата, X-звіт.
+- Розрахунок чека із замовлення: знижки, доставка, вага.
+- Типи згенеровано з офіційної специфікації Checkbox API.
+- Без залежностей.
+
+Бібліотека безкоштовна, з відкритим кодом. Пакет: [`@tolokacode/checkbox`](https://www.npmjs.com/package/@tolokacode/checkbox).
+
+## Вимоги
+
+| | |
+|---|---|
+| Node.js | 18 або новіший. Також Bun і серверна частина Next.js. |
+| Checkbox | Ключ ліцензії каси і PIN-код касира. Підійде тестова каса. |
+
+Ключ і PIN зберігайте лише на сервері. У браузері бібліотеку не використовуйте.
+
+## Встановлення
+
+```sh
+npm install @tolokacode/checkbox
+```
+
+## Перший чек
+
+```ts
+import { randomUUID } from 'node:crypto';
+import { Checkbox } from '@tolokacode/checkbox';
+
+const checkbox = new Checkbox({
+  licenseKey: process.env.CHECKBOX_LICENSE_KEY!,
+  pinCode: process.env.CHECKBOX_PIN!,
+});
+
+await checkbox.ensureShift();
+
+const receipt = await checkbox.sell({
+  id: randomUUID(),
+  goods: [{ good: { code: 'sku-1', name: 'Футболка', price: 45000 }, quantity: 1000 }],
+  payments: [{ type: 'CASHLESS', value: 45000, label: 'Інтернет еквайринг' }],
+  delivery: { emails: ['client@example.com'] },
+});
+
+const done = await checkbox.waitForReceipt(receipt.id);
+console.log(done.fiscal_code, `https://check.checkbox.ua/${receipt.id}`);
+```
+
+Суми в копійках, кількість у тисячних: `1000` це 1 штука.
+
+## З чого почати
+
+1. [Створіть тестову касу](./testing.mdx) і перевірте перший чек.
+2. [Створюйте чеки із замовлень](./receipts.mdx).
+3. [Налаштуйте зміни](./shifts.mdx).
+4. [Налаштуйте клієнт](./client.mdx) для сервера, журналів і кількох кас.

@@ -2,6 +2,9 @@
   "home.monobank.text": {
     "message": "monobank installments and cash on delivery with online prepayment."
   },
+  "home.checkbox.text": {
+    "message": "Checkbox fiscal receipts (ПРРО) from your server. The @tolokacode/checkbox package on npm."
+  },
   "home.fact.free.title": {
     "message": "Free"
   },

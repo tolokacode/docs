@@ -1,0 +1,31 @@
+---
+sidebar_position: 5
+title: Testing
+---
+
+# Testing
+
+You don't need a real cash register to try it.
+
+1. Sign up in the [Checkbox account](https://my.checkbox.ua).
+2. Create a **test cash register** and a cashier with a PIN code.
+3. Take the register's license key and the cashier's PIN.
+
+Receipts on a test register don't go to the tax office. Their fiscal code starts with `TEST-`.
+
+## Library tests
+
+```sh
+git clone https://github.com/tolokacode/checkbox-js.git
+cd checkbox-js
+npm install
+npm test
+```
+
+Without keys, only the tests that don't need the network run. To check everything on your own test register:
+
+```sh
+CHECKBOX_LICENSE_KEY=... CHECKBOX_PIN=... npm test
+```
+
+The tests open a shift and create a sale, a return and a prepayment chain.

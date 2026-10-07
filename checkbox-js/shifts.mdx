@@ -1,0 +1,36 @@
+---
+sidebar_position: 3
+title: Зміни
+---
+
+# Зміни
+
+Чек можна створити лише у відкритій зміні.
+
+## Автоматично
+
+Викликайте `ensureShift()` перед чеком. Він відкриває зміну, якщо її немає, і чекає, поки вона відкриється.
+
+```ts
+import { nextTime } from '@tolokacode/checkbox';
+
+await checkbox.ensureShift({ autoCloseAt: nextTime('23:50') });
+```
+
+`nextTime('23:50')` це найближчі 23:50 за київським часом. Checkbox сам закриє зміну в цей час і сформує Z-звіт. Наступний чек відкриє нову зміну.
+
+## Вручну
+
+```ts
+const shift = await checkbox.currentShift(); // null, якщо зміни немає
+await checkbox.openShift();
+await checkbox.closeShift();
+```
+
+`shift.status` буває `OPENING`, `OPENED`, `CLOSING` і `CLOSED`.
+
+## X-звіт
+
+```ts
+const report = await checkbox.xReport();
+```

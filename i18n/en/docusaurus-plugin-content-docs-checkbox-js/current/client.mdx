@@ -1,0 +1,67 @@
+---
+sidebar_position: 4
+title: Client settings
+---
+
+# Client settings
+
+| Option | What to pass |
+|---|---|
+| `licenseKey` | Cash register license key: Checkbox account → Cash registers → your register. |
+| `pinCode` | Cashier PIN code: Checkbox account → Cashiers. Or the cashier's `login` and `password`. |
+| `token`, `onToken` | A saved cashier token. See below. |
+| `onRequest` | Request log. |
+| `fetch` | Your own `fetch`, for example in tests. |
+
+## Serverless
+
+The library signs in as the cashier on the first request and again when the token expires. On serverless (Vercel, Netlify, AWS Lambda) every call starts fresh. To skip signing in every time, keep the token in a cache:
+
+```ts
+const checkbox = new Checkbox({
+  licenseKey,
+  pinCode,
+  token: await cache.get('checkbox-token'),
+  onToken: (token) => cache.set('checkbox-token', token),
+});
+```
+
+## Log
+
+```ts
+const checkbox = new Checkbox({
+  licenseKey,
+  pinCode,
+  onRequest: (log) => console.log(log.method, log.path, log.status, `${log.ms}ms`, log.error ?? ''),
+});
+```
+
+The log has no PIN and no receipt contents.
+
+## Several registers
+
+For several cash registers or legal entities, create one `Checkbox` per register. For example, one for card payments and another for cash on delivery.
+
+## Errors
+
+Checkbox errors come as `CheckboxError`. `status` is the HTTP code, `body` is the Checkbox response, `message` is the error text.
+
+```ts
+import { CheckboxError } from '@tolokacode/checkbox';
+
+try {
+  await checkbox.sell(receipt);
+} catch (error) {
+  if (error instanceof CheckboxError) {
+    console.log(error.status, error.message);
+  }
+}
+```
+
+## Other requests
+
+For requests the library doesn't have, use `request()`. It adds sign-in and headers for you. All requests are in the [Checkbox API docs](https://api.checkbox.in.ua/api/docs).
+
+```ts
+const taxes = await checkbox.request('GET', '/tax');
+```

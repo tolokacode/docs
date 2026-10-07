@@ -48,6 +48,16 @@ const config = {
         },
       },
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'checkbox-js',
+        path: 'checkbox-js',
+        routeBasePath: 'checkbox-js',
+        sidebarPath: './sidebars-checkbox-js.js',
+        editUrl: 'https://github.com/tolokacode/docs/edit/main/',
+      },
+    ],
   ],
 
   themeConfig: {
@@ -57,6 +67,7 @@ const config = {
       logo: {alt: 'tolokacode', src: 'img/logo.svg'},
       items: [
         {type: 'docSidebar', docsPluginId: 'monobank', sidebarId: 'monobank', position: 'left', label: 'Toloka for monobank'},
+        {type: 'docSidebar', docsPluginId: 'checkbox-js', sidebarId: 'checkbox', position: 'left', label: 'Checkbox SDK'},
         {type: 'docsVersionDropdown', docsPluginId: 'monobank', position: 'right'},
         {type: 'localeDropdown', position: 'right'},
         {href: 'https://github.com/tolokacode', label: 'GitHub', position: 'right'},
@@ -77,6 +88,14 @@ const config = {
           items: [
             {label: 'Документація', to: '/monobank/'},
             {label: 'Помилки та ідеї', href: 'https://github.com/tolokacode/toloka-monobank/issues'},
+          ],
+        },
+        {
+          title: 'Checkbox SDK',
+          items: [
+            {label: 'Документація', to: '/checkbox-js/'},
+            {label: 'npm', href: 'https://www.npmjs.com/package/@tolokacode/checkbox'},
+            {label: 'Помилки та ідеї', href: 'https://github.com/tolokacode/checkbox-js/issues'},
           ],
         },
       ],

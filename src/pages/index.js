@@ -12,6 +12,13 @@ const projects = [
     github: 'https://github.com/tolokacode/toloka-monobank',
     text: <Translate id="home.monobank.text">Покупка частинами monobank і накладений платіж з онлайн-передоплатою.</Translate>,
   },
+  {
+    name: 'Checkbox SDK',
+    tags: ['TypeScript', 'Checkbox', 'v0.1.0'],
+    docs: '/checkbox-js/',
+    github: 'https://github.com/tolokacode/checkbox-js',
+    text: <Translate id="home.checkbox.text">Фіскальні чеки Checkbox (ПРРО) з вашого сервера. Пакет @tolokacode/checkbox на npm.</Translate>,
+  },
 ];
 
 const facts = [

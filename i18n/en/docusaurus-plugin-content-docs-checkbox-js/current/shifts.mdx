@@ -1,0 +1,36 @@
+---
+sidebar_position: 3
+title: Shifts
+---
+
+# Shifts
+
+You can only create a receipt in an open shift.
+
+## Automatically
+
+Call `ensureShift()` before a receipt. It opens a shift if there is none and waits until it is open.
+
+```ts
+import { nextTime } from '@tolokacode/checkbox';
+
+await checkbox.ensureShift({ autoCloseAt: nextTime('23:50') });
+```
+
+`nextTime('23:50')` is the next 23:50 in Kyiv time. Checkbox closes the shift at that time and makes the Z report. The next receipt opens a new shift.
+
+## By hand
+
+```ts
+const shift = await checkbox.currentShift(); // null when there is no shift
+await checkbox.openShift();
+await checkbox.closeShift();
+```
+
+`shift.status` is `OPENING`, `OPENED`, `CLOSING` or `CLOSED`.
+
+## X report
+
+```ts
+const report = await checkbox.xReport();
+```

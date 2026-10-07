@@ -1,0 +1,67 @@
+---
+sidebar_position: 4
+title: Налаштування клієнта
+---
+
+# Налаштування клієнта
+
+| Параметр | Що вказати |
+|---|---|
+| `licenseKey` | Ключ ліцензії каси: кабінет Checkbox → Каси → ваша каса. |
+| `pinCode` | PIN-код касира: кабінет Checkbox → Касири. Або `login` і `password` касира. |
+| `token`, `onToken` | Збережений токен касира. Дивіться нижче. |
+| `onRequest` | Журнал запитів. |
+| `fetch` | Свій `fetch`, наприклад для тестів. |
+
+## Сервер без стану
+
+Бібліотека входить як касир при першому запиті і знову, коли токен застаріє. На serverless (Vercel, Netlify, AWS Lambda) кожен виклик стартує заново. Щоб не входити щоразу, збережіть токен у кеші:
+
+```ts
+const checkbox = new Checkbox({
+  licenseKey,
+  pinCode,
+  token: await cache.get('checkbox-token'),
+  onToken: (token) => cache.set('checkbox-token', token),
+});
+```
+
+## Журнал
+
+```ts
+const checkbox = new Checkbox({
+  licenseKey,
+  pinCode,
+  onRequest: (log) => console.log(log.method, log.path, log.status, `${log.ms}ms`, log.error ?? ''),
+});
+```
+
+У журнал не потрапляють ні PIN, ні вміст чеків.
+
+## Кілька кас
+
+Для кількох кас або юридичних осіб створіть окремий `Checkbox` для кожної каси. Наприклад, одну для оплати карткою, іншу для накладеного платежу.
+
+## Помилки
+
+Помилки Checkbox приходять як `CheckboxError`. У `status` код HTTP, у `body` відповідь Checkbox, у `message` текст помилки.
+
+```ts
+import { CheckboxError } from '@tolokacode/checkbox';
+
+try {
+  await checkbox.sell(receipt);
+} catch (error) {
+  if (error instanceof CheckboxError) {
+    console.log(error.status, error.message);
+  }
+}
+```
+
+## Інші запити
+
+Для запитів, яких немає в бібліотеці, використовуйте `request()`. Вхід і заголовки бібліотека додасть сама. Усі запити описано в [документації Checkbox API](https://api.checkbox.in.ua/api/docs).
+
+```ts
+const taxes = await checkbox.request('GET', '/tax');
+```

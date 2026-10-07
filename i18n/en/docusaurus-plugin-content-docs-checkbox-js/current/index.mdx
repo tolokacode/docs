@@ -1,0 +1,64 @@
+---
+sidebar_position: 1
+title: Overview
+slug: /
+---
+
+# Checkbox SDK
+
+A TypeScript and JavaScript library for fiscal receipts through [Checkbox](https://checkbox.ua) (ПРРО) from your site or server.
+
+- Cashier, shifts, sale and return receipts, prepayment and after-payment, X report.
+- Builds a receipt from an order: discounts, shipping, weight.
+- Types are generated from the official Checkbox API spec.
+- No dependencies.
+
+The library is free and open source. Package: [`@tolokacode/checkbox`](https://www.npmjs.com/package/@tolokacode/checkbox).
+
+## Requirements
+
+| | |
+|---|---|
+| Node.js | 18 or newer. Also Bun and the server side of Next.js. |
+| Checkbox | Cash register license key and cashier PIN code. A test register is fine. |
+
+Keep the key and PIN on the server. Don't use the library in the browser.
+
+## Install
+
+```sh
+npm install @tolokacode/checkbox
+```
+
+## First receipt
+
+```ts
+import { randomUUID } from 'node:crypto';
+import { Checkbox } from '@tolokacode/checkbox';
+
+const checkbox = new Checkbox({
+  licenseKey: process.env.CHECKBOX_LICENSE_KEY!,
+  pinCode: process.env.CHECKBOX_PIN!,
+});
+
+await checkbox.ensureShift();
+
+const receipt = await checkbox.sell({
+  id: randomUUID(),
+  goods: [{ good: { code: 'sku-1', name: 'Футболка', price: 45000 }, quantity: 1000 }],
+  payments: [{ type: 'CASHLESS', value: 45000, label: 'Інтернет еквайринг' }],
+  delivery: { emails: ['client@example.com'] },
+});
+
+const done = await checkbox.waitForReceipt(receipt.id);
+console.log(done.fiscal_code, `https://check.checkbox.ua/${receipt.id}`);
+```
+
+Amounts are in kopecks, quantities in thousandths: `1000` is 1 piece.
+
+## Getting started
+
+1. [Create a test register](./testing.mdx) and check your first receipt.
+2. [Create receipts from orders](./receipts.mdx).
+3. [Set up shifts](./shifts.mdx).
+4. [Configure the client](./client.mdx) for servers, logs and several registers.
