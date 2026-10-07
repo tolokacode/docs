@@ -1,0 +1,30 @@
+{
+  "link.title.tolokacode": {
+    "message": "tolokacode",
+    "description": "The title of the footer links column with title=tolokacode in the footer"
+  },
+  "link.title.Toloka for monobank": {
+    "message": "Toloka for monobank",
+    "description": "The title of the footer links column with title=Toloka for monobank in the footer"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/tolokacode"
+  },
+  "copyright": {
+    "message": "EUPL-1.2 · tolokacode",
+    "description": "The footer copyright"
+  },
+  "link.item.label.Як долучитися": {
+    "message": "Contributing",
+    "description": "The label of footer link with label=Як долучитися linking to https://github.com/tolokacode/.github/blob/main/CONTRIBUTING.md"
+  },
+  "link.item.label.Документація": {
+    "message": "Documentation",
+    "description": "The label of footer link with label=Документація linking to /monobank/"
+  },
+  "link.item.label.Помилки та ідеї": {
+    "message": "Issues and ideas",
+    "description": "The label of footer link with label=Помилки та ідеї linking to https://github.com/tolokacode/toloka-monobank/issues"
+  }
+}
