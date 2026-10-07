@@ -99,7 +99,7 @@ const config = {
           ],
         },
       ],
-      copyright: 'EUPL-1.2 · tolokacode',
+      copyright: 'EUPL-1.2 і MIT · tolokacode',
     },
     prism: {theme: prismThemes.github, darkTheme: prismThemes.dracula},
   },
