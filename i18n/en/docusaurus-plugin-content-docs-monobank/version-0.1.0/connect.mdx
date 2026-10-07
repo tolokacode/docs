@@ -1,0 +1,31 @@
+---
+sidebar_position: 2
+title: Connect to monobank
+---
+
+# Connect to monobank
+
+The plugin works through the bank's API, so the shop needs to connect to monobank first.
+
+## Installments
+
+1. Apply to connect your shop to monobank installments on [monobank.ua](https://www.monobank.ua/) (the business section).
+2. After signing the contract, the bank gives you:
+   - **Store ID**, your shop's identifier;
+   - **secret key**, used to sign requests.
+3. Check in the contract **which numbers of payments** you're allowed (for example 3, 4, 6). Enter the same numbers in the plugin settings.
+
+:::tip
+You can set everything up and test it in [sandbox mode](./testing.mdx) before you have a contract. Sandbox mode doesn't need one.
+:::
+
+## Prepayment (plata by mono)
+
+Cash on delivery with prepayment needs **plata by mono** online acquiring and its **token**.
+
+- If the official "plata by mono" plugin is installed, there's nothing to do: Toloka uses its token.
+- If not, get the token in your plata by mono account and paste it into the cash on delivery settings.
+
+:::note
+The bank's connection process may change. If something differs from this page, tell us on [GitHub](https://github.com/tolokacode/toloka-monobank/issues) and we'll update the docs.
+:::

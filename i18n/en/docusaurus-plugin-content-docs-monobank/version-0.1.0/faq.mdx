@@ -1,0 +1,27 @@
+---
+sidebar_position: 9
+title: FAQ and troubleshooting
+---
+
+# FAQ and troubleshooting
+
+### Do I need the official plata by mono plugin?
+
+Only for card payments and for the prepayment token. Installments work without it.
+
+### Is there a paid version?
+
+No. Every feature is free.
+
+### The order status doesn't change
+
+- Make sure the site is reachable from the internet and that a security plugin or firewall doesn't block `https://your-site/wp-json/toloka/v1/chast`. The bank sends notifications there.
+- Make sure WP-Cron works: the plugin checks applications every 5 minutes.
+
+### Where can I see what happened?
+
+**WooCommerce → Status → Logs**, source `toloka-chast` (installments) or `toloka-prepay` (prepayment). Phone numbers are masked in the logs.
+
+### Found a bug?
+
+Tell us in [GitHub Issues](https://github.com/tolokacode/toloka-monobank/issues).

@@ -1,0 +1,25 @@
+---
+sidebar_position: 6
+title: Orders
+---
+
+# Orders
+
+## Statuses
+
+| Method | Status | Meaning |
+|---|---|---|
+| Installments | On hold | The customer is confirming in the app (up to 15 minutes). Don't ship yet. |
+| | Processing | The customer confirmed. Ship the order. |
+| | Completed | Set this after shipping. The bank confirms the purchase and pays the shop. |
+| | Cancelled | Before Completed, this cancels the application at the bank. After Completed, use a refund instead. |
+| Cash on delivery | Pending payment | The prepayment hasn't arrived. Don't ship. |
+| | Processing | The prepayment arrived. |
+
+Statuses update automatically: the bank sends notifications, and the plugin also checks applications every 5 minutes.
+
+## Refunds
+
+Refunds are possible after **Completed**. Click **Refund** in the order as usual in WooCommerce. The money goes back to the customer's card.
+
+If the goods haven't shipped yet, just **cancel** the order.

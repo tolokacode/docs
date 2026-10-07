@@ -1,0 +1,26 @@
+---
+sidebar_position: 5
+title: Prepayment
+---
+
+# Cash on delivery with prepayment
+
+Toloka extends WooCommerce's standard **Cash on delivery**. Shipping plugins keep working with it as before.
+
+Open **WooCommerce → Settings → Payments → Cash on delivery**, section **Prepayment through plata by mono**.
+
+| Field | What to enter |
+|---|---|
+| Prepayment | A **fixed amount** in UAH or a **percentage** of the order. |
+| Prepayment size | `0` means regular cash on delivery without prepayment. |
+| plata by mono token | Leave empty to use the token from the official "plata by mono" plugin. |
+
+While the prepayment is 0, nothing changes. So installing the plugin doesn't affect your shop on its own.
+
+## How it works
+
+1. The customer chooses cash on delivery and goes to the monobank payment page.
+2. After paying, the order moves to **Processing**.
+3. The amount the customer pays on delivery is shown in the order in the **"Cash on delivery (waybill)"** row.
+
+If the customer didn't pay, the order stays **Pending payment**, and the thank-you page has a "Pay the prepayment" button.
