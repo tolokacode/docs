@@ -23,7 +23,7 @@ const projects = [
 
 const facts = [
   {title: <Translate id="home.fact.free.title">Безкоштовно</Translate>, text: <Translate id="home.fact.free.text">Без платних версій і ліцензійних ключів.</Translate>},
-  {title: <Translate id="home.fact.open.title">Відкритий код</Translate>, text: <Translate id="home.fact.open.text">Усе на GitHub. Плагіни під ліцензією EUPL-1.2, бібліотеки під MIT.</Translate>},
+  {title: <Translate id="home.fact.open.title">Відкритий код</Translate>, text: <Translate id="home.fact.open.text">Усе на GitHub. Плагіни під ліцензією GPLv2 or later, бібліотеки під MIT.</Translate>},
   {title: <Translate id="home.fact.lang.title">Дві мови</Translate>, text: <Translate id="home.fact.lang.text">Українська та англійська, в плагінах і документації.</Translate>},
 ];
 

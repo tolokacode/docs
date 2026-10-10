@@ -15,7 +15,7 @@
     "message": "Open source"
   },
   "home.fact.open.text": {
-    "message": "Everything is on GitHub. Plugins under the EUPL-1.2 license, libraries under MIT."
+    "message": "Everything is on GitHub. Plugins under the GPLv2 or later license, libraries under MIT."
   },
   "home.fact.lang.title": {
     "message": "Two languages"
